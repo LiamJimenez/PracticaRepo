@@ -11,7 +11,7 @@ namespace Practica.Models
     public class ApplicationUser:IdentityUser 
     {
         [Required]
-        public int Name {  get; set; }
+        public string Name {  get; set; }
         public string? StreetAndress { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
