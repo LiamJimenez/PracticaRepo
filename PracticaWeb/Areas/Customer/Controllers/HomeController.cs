@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Practica.DataAccess.Repository.IRepository;
 using Practica.Models;
 using PracticaModels;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace PracticaWeb.Areas.Customer.Controllers
 {
@@ -24,10 +26,26 @@ namespace PracticaWeb.Areas.Customer.Controllers
             return View(productsList);
         }
 
-        public IActionResult Details(int productId)
+        public IActionResult Details(int productId) 
         {
-            Product product = _unitOfWork.Product.Get(u=>u.Id== productId, includeProperties: "Category");
-            return View(product);
+            ShoppingCart cart = new()
+            {
+                Product = _unitOfWork.Product.Get(u => u.Id == productId, includeProperties: "Category"),
+                Count = 1,
+                ProductId = productId
+            };
+            return View(cart);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart) 
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+
+            return View();
         }
 
         public IActionResult Privacy()

@@ -168,6 +168,12 @@ namespace PracticaWeb.Areas.Identity.Pages.Account
                 user.State = Input.State;
                 user.PostalCode = Input.PostalCode;
                 user.PhoneNumber = Input.PhoneNumber;
+
+                if (Input.Role == SD.Role_Company)
+                {
+                    user.CompanyId = Input.CompanyId;
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -175,7 +181,7 @@ namespace PracticaWeb.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     if (!String.IsNullOrEmpty(Input.Role))
-                    { 
+                    {
                         await _userManager.AddToRoleAsync(user, Input.Role);
                     }
                     else
